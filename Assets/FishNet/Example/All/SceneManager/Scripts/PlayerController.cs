@@ -4,28 +4,47 @@ using UnityEngine;
 
 namespace FishNet.Example.Scened
 {
-
-
     public class PlayerController : NetworkBehaviour
     {
         [SerializeField]
-        private GameObject _camera;
+        private LayerMask layerMask;
         [SerializeField]
         private float _moveRate = 4f;
         [SerializeField]
         private bool _clientAuth = true;
+        [SerializeField]
+        private GameObject FOV;
+
+        private Camera camera;
 
         public override void OnStartClient()
         {
             base.OnStartClient();
             if (base.IsOwner)
-                _camera.SetActive(true);
+            {
+                camera = GameObject.Find("Camera").GetComponent<Camera>();
+            }
+
+
+        }
+
+        private void Start()
+        {
+            //Instantiate(FOV);
         }
 
         private void Update()
         {
             if (!base.IsOwner)
                 return;
+
+            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+            Physics.Raycast(ray, out var hit, float.MaxValue, layerMask);
+            var dir = hit.point;
+            dir.y = transform.position.y;
+
+            //Vector3 mousePos = camera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, camera.transform.position.y));
+            transform.LookAt(dir);
 
             float hor = Input.GetAxisRaw("Horizontal");
             float ver = Input.GetAxisRaw("Vertical");
@@ -53,20 +72,17 @@ namespace FishNet.Example.Scened
 
         private void Move(float hor, float ver)
         {
-            float gravity = -10f * Time.deltaTime;
-            //If ray hits floor then cancel gravity.
-            Ray ray = new Ray(transform.position + new Vector3(0f, 0.05f, 0f), -Vector3.up);
-            if (Physics.Raycast(ray, 0.1f + -gravity))
-                gravity = 0f;
+            //float gravity = -10f * Time.deltaTime;
+            ////If ray hits floor then cancel gravity.
+            //Ray ray = new Ray(transform.position + new Vector3(0f, 0.05f, 0f), -Vector3.up);
+            //if (Physics.Raycast(ray, 0.1f + -gravity))
+            //    gravity = 0f;
 
             /* Moving. */
-            Vector3 direction = new Vector3(
-                0f,
-                gravity,
-                ver * _moveRate * Time.deltaTime);
+            Vector3 direction = new Vector3(hor, 0f, ver) * _moveRate * Time.deltaTime;
 
-            transform.position += transform.TransformDirection(direction);
-            transform.Rotate(new Vector3(0f, hor * 100f * Time.deltaTime, 0f));
+            transform.position += direction;
+            //transform.Rotate(new Vector3(0f, hor * 100f * Time.deltaTime, 0f));
         }
 
     }
