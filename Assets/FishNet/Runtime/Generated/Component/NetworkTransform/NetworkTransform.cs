@@ -465,7 +465,7 @@ namespace FishNet.Component.Transforming
                 }
             }
 
-            
+
         }
 
         public override void OnStartClient()
@@ -548,7 +548,7 @@ namespace FishNet.Component.Transforming
                 _intervalsRemaining = _interval;
             }
 
-            
+
             if (base.IsServer)
                 SendToClients();
             if (base.IsClient)
@@ -904,7 +904,7 @@ namespace FishNet.Component.Transforming
             }
         }
 
-        
+
 
         /// <summary>
         /// Moves to a GoalData. Automatically determins if to use data from server or client.
@@ -937,7 +937,7 @@ namespace FishNet.Component.Transforming
             TransformData td = _currentGoalData.Transforms;
             RateData rd = _currentGoalData.Rates;
 
-            
+
 
             float multiplier = 1f;
             int queueCount = _goalDataQueue.Count;
@@ -1003,15 +1003,15 @@ namespace FishNet.Component.Transforming
                 //No more in buffer, see if can extrapolate.
                 else
                 {
-                    
-                        /* If everything matches up then end queue.
-                        * Otherwise let it play out until stuff
-                        * aligns. Generally the time remaining is enough
-                        * but every once in awhile something goes funky
-                        * and it's thrown off. */
-                        if (!HasChanged(td))
-                            _queueReady = false;
-                        
+
+                    /* If everything matches up then end queue.
+                    * Otherwise let it play out until stuff
+                    * aligns. Generally the time remaining is enough
+                    * but every once in awhile something goes funky
+                    * and it's thrown off. */
+                    if (!HasChanged(td))
+                        _queueReady = false;
+
                 }
             }
 
@@ -1423,7 +1423,7 @@ namespace FishNet.Component.Transforming
             //Default value.
             next.ExtrapolationState = TransformData.ExtrapolateState.Disabled;
 
-            
+
         }
 
 
@@ -1581,7 +1581,7 @@ namespace FishNet.Component.Transforming
         [TargetRpc]
         private void TargetSetParent(NetworkConnection conn, NetworkBehaviour parent)
         {
-            
+
         }
 
         /// <summary>

@@ -25,12 +25,6 @@ namespace FishNet.Example.Scened
                 camera = GameObject.Find("Camera").GetComponent<Camera>();
             }
 
-
-        }
-
-        private void Start()
-        {
-            //Instantiate(FOV);
         }
 
         private void Update()
@@ -84,8 +78,5 @@ namespace FishNet.Example.Scened
             transform.position += direction;
             //transform.Rotate(new Vector3(0f, hor * 100f * Time.deltaTime, 0f));
         }
-
     }
-
-
 }
