@@ -7,28 +7,32 @@ public class PlayerGun : NetworkBehaviour
     [SerializeField] private GameObject bulletTrail;
     [SerializeField] private float weaponRange;
     [SerializeField] private Animator muzzleFlashAnimator;
-    [SerializeField] private LayerMask layerMask;
-    [SerializeField]
-    private bool _clientAuth = true;
+    [SerializeField] private bool _clientAuth = true;
 
-    // Start is called before the first frame update
-    void Start()
+    private LayerMask EnemyLayer;
+    private LayerMask OwnerLayer;
+    private LayerMask PlayerLayer;
+    private PlayerController playerController;
+    private bool IsDead => playerController.IsDead;
+
+    private void Awake()
     {
+        EnemyLayer = 1 << LayerMask.NameToLayer("Enemy");
+        OwnerLayer = 1 << LayerMask.NameToLayer("Owner");
+        PlayerLayer = 1 << LayerMask.NameToLayer("Player");
 
+        playerController = GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!IsOwner)
-            return;
+        if (!IsOwner) return;
+        if (IsDead) return;
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (_clientAuth)
-                Shot();
-            else
-                RpcShot();
+            RpcShot();
         }
     }
 
@@ -38,10 +42,24 @@ public class PlayerGun : NetworkBehaviour
         Shot();
     }
 
+    [Server]
     private void Shot()
     {
+        bool isHit = Physics.Raycast(gunPoint.position, transform.forward, out var hit, weaponRange, PlayerLayer);
+
+        DrawShot();
+
+        if (isHit)
+        {
+            hit.rigidbody.GetComponent<Hittable>().Hit(10);
+        }
+    }
+
+    [ObserversRpc]
+    private void DrawShot()
+    {
         //muzzleFlashAnimator.SetTrigger("Shoot");
-        bool isHit = Physics.Raycast(gunPoint.position, transform.forward, out var hit, weaponRange, layerMask);
+        bool isHit = Physics.Raycast(gunPoint.position, transform.forward, out var hit, weaponRange, EnemyLayer);
 
         var trail = Instantiate(
             bulletTrail,
@@ -54,8 +72,6 @@ public class PlayerGun : NetworkBehaviour
         if (isHit)
         {
             trailScript.SetTargetPosition(hit.point);
-            //var hittable = hit.collider.GetComponent<IHittable>();
-            //hittable?.Hit();
         }
         else
         {

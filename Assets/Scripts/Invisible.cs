@@ -4,13 +4,20 @@ using UnityEngine;
 
 public class Invisible : MonoBehaviour
 {
+    public bool AlwaysVisible = false;
+
     MeshRenderer[] renderers;
     int invisibleCount = 0;
+
+
 
     private void Start()
     {
         renderers = gameObject.GetComponentsInChildren<MeshRenderer>();
-        SetVisible(false);
+        if (AlwaysVisible)
+            SetVisible(true);
+        else
+            SetVisible(false);
     }
 
     public void IncreaseVisibleCount(int cnt)
@@ -31,8 +38,10 @@ public class Invisible : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
+        if (AlwaysVisible) return;
+
         if (invisibleCount > 0)
         {
             invisibleCount--;
