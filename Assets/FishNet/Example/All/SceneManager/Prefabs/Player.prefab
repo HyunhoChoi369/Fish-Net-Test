@@ -534,7 +534,7 @@ MonoBehaviour:
   _extrapolation: 0
   _enableTeleport: 0
   _teleportThreshold: 0
-  _clientAuthoritative: 0
+  _clientAuthoritative: 1
   _sendToOwner: 1
   _interval: 1
   _synchronizePosition: 1
@@ -598,6 +598,7 @@ MonoBehaviour:
   weaponRange: 15
   muzzleFlashAnimator: {fileID: 0}
   _clientAuth: 1
+  curGunData: {fileID: 11400000, guid: f8f999dd1bac7b341a9d52b3985be94c, type: 2}
 --- !u!114 &8534302468556827491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -617,7 +618,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _moveRate: 10
-  _clientAuth: 0
+  _clientAuth: 1
   FOV: {fileID: 0}
   IsDead: 0
 --- !u!114 &3372145893015974246

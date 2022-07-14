@@ -23,6 +23,8 @@ public class PlayerBase : Hittable
         OwnerLayer = LayerMask.NameToLayer("Owner");
         PlayerLayer = LayerMask.NameToLayer("Player");
         playerController = GetComponent<PlayerController>();
+
+        PlayerManager.Instance.AddPlayer(this);
     }
 
     public override void Hit(int damage)
@@ -63,6 +65,14 @@ public class PlayerBase : Hittable
                 gameObject.layer = EnemyLayer;
             }
         }
+    }
+
+
+
+    [ServerRpc]
+    public void GetItem(byte playerIndex, ItemType itemType)
+    {
+        Debug.Log($"player{ClientManager.Connection} is got {itemType}");
     }
 }
 

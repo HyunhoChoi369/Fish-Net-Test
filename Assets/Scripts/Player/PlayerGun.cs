@@ -1,4 +1,5 @@
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using UnityEngine;
 
 public class PlayerGun : NetworkBehaviour
@@ -13,6 +14,10 @@ public class PlayerGun : NetworkBehaviour
     private LayerMask OwnerLayer;
     private LayerMask PlayerLayer;
     private PlayerController playerController;
+    private float shotDelay = 0;
+
+    [SyncVar] public GunData curGunData = null;
+
     private bool IsDead => playerController.IsDead;
 
     private void Awake()
@@ -30,10 +35,15 @@ public class PlayerGun : NetworkBehaviour
         if (!IsOwner) return;
         if (IsDead) return;
 
-        if (Input.GetMouseButtonDown(0))
+        shotDelay += Time.deltaTime;
+
+        if (shotDelay > curGunData.ShotDelay && Input.GetMouseButton(0))
         {
             RpcShot();
+            DrawShot();
+            shotDelay = 0f;
         }
+
     }
 
     [ServerRpc]
@@ -45,9 +55,13 @@ public class PlayerGun : NetworkBehaviour
     [Server]
     private void Shot()
     {
-        bool isHit = Physics.Raycast(gunPoint.position, transform.forward, out var hit, weaponRange, PlayerLayer);
+        var dir = transform.forward;
+        var spreadX = Random.Range(-curGunData.Spread, curGunData.Spread);
+        //var spreadY = Random.Range(-curGunData.Spread, curGunData.Spread);
+        dir = Quaternion.AngleAxis(spreadX, transform.up) * dir;
+        //dir = Quaternion.AngleAxis(spreadY, transform.right) * dir;
 
-        DrawShot();
+        bool isHit = Physics.Raycast(gunPoint.position, dir, out var hit, weaponRange, PlayerLayer);
 
         if (isHit)
         {
@@ -55,11 +69,15 @@ public class PlayerGun : NetworkBehaviour
         }
     }
 
-    [ObserversRpc]
     private void DrawShot()
     {
         //muzzleFlashAnimator.SetTrigger("Shoot");
-        bool isHit = Physics.Raycast(gunPoint.position, transform.forward, out var hit, weaponRange, EnemyLayer);
+
+        var dir = transform.forward;
+        var spreadX = Random.Range(-curGunData.Spread, curGunData.Spread);
+        dir = Quaternion.AngleAxis(spreadX, transform.up) * dir;
+
+        bool isHit = Physics.Raycast(gunPoint.position, dir, out var hit, weaponRange, EnemyLayer);
 
         var trail = Instantiate(
             bulletTrail,
@@ -75,7 +93,7 @@ public class PlayerGun : NetworkBehaviour
         }
         else
         {
-            var endPosition = gunPoint.position + transform.forward * weaponRange;
+            var endPosition = gunPoint.position + dir * weaponRange;
             trailScript.SetTargetPosition(endPosition);
         }
     }

@@ -33,10 +33,15 @@ public class PlayerController : NetworkBehaviour
         if (!base.IsOwner) return;
         if (IsDead) return;
 
-        Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-        Physics.Raycast(ray, out var hit, float.MaxValue, layerMask);
-        var dir = hit.point;
-        dir.y = transform.position.y;
+        var dir = transform.forward;
+
+        if (IsClient)
+        {
+            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+            Physics.Raycast(ray, out var hit, float.MaxValue, layerMask);
+            dir = hit.point;
+            dir.y = transform.position.y;
+        }
 
         //Vector3 mousePos = camera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, camera.transform.position.y));
 
