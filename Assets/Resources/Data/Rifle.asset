@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0220dcd5ef744a644990aa3f2afadbb2, type: 3}
   m_Name: Rifle
   m_EditorClassIdentifier: 
-  Index: 2
+  Index: 100
   CanAuto: 0
-  ShotDelay: 0
-  MagazineCapacity: 0
-  AmmoMax: 0
-  Range: 0
-  Damage: 0
-  Spread: 0
+  ShotDelay: 1
+  MagazineCapacity: 15
+  AmmoMax: 150
+  Range: 15
+  Damage: 20
+  Spread: 5

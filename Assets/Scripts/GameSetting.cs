@@ -11,17 +11,20 @@ public class GameSetting : NetworkBehaviour
     {
         base.OnStartNetwork();
 
+        DataContainer.Instance.Init();
+
+
         if (IsServerOnly)
         {
-            Instantiate(serverUI, uiCanvas);
+            //Instantiate(serverUI, uiCanvas);
             serverUI.startButton.onClick.AddListener(OnStartButtonClicked);
+            ItemManager.Instance.SpawnItems(true);
         }
 
         if (IsClientOnly)
         {
-            Instantiate(clientUI, uiCanvas);
-
-            //준비 동작 무언가
+            //Instantiate(clientUI, uiCanvas);
+            ItemManager.Instance.SpawnItems(false);
         }
     }
 
@@ -30,4 +33,5 @@ public class GameSetting : NetworkBehaviour
         //처음엔 자유롭게 놔두고 무적상태
         //스타트 버튼 누르면 배정된 자리로 이동하고 실제 게임 스타트
     }
+
 }

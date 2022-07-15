@@ -15,8 +15,18 @@ public class PlayerGun : NetworkBehaviour
     private LayerMask PlayerLayer;
     private PlayerController playerController;
     private float shotDelay = 0;
+    private PlayerBase playerBase;
 
-    [SyncVar] public GunData curGunData = null;
+    [SyncVar(OnChange = nameof(OnCurGunDataChanged))] public GunData curGunData = null;
+
+    private void OnCurGunDataChanged(GunData oldValue, GunData newValue, bool asServer)
+    {
+        if (IsClient)
+        {
+            Debug.Log($"Change Gun : {newValue.name}");
+            // 그림 바꾸기
+        }
+    }
 
     private bool IsDead => playerController.IsDead;
 
@@ -27,6 +37,7 @@ public class PlayerGun : NetworkBehaviour
         PlayerLayer = 1 << LayerMask.NameToLayer("Player");
 
         playerController = GetComponent<PlayerController>();
+        playerBase = GetComponent<PlayerBase>();
     }
 
     // Update is called once per frame
@@ -72,6 +83,7 @@ public class PlayerGun : NetworkBehaviour
     private void DrawShot()
     {
         //muzzleFlashAnimator.SetTrigger("Shoot");
+        playerBase.PlayShot();
 
         var dir = transform.forward;
         var spreadX = Random.Range(-curGunData.Spread, curGunData.Spread);

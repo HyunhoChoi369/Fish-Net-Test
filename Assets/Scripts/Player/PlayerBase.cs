@@ -10,19 +10,26 @@ public class PlayerBase : Hittable
     public int Life = 100;
     public Animator animator;
 
-    private int EnemyLayer;
-    private int OwnerLayer;
-    private int PlayerLayer;
+    private int enemyLayer;
+    private int ownerLayer;
+    private int playerLayer;
     private PlayerController playerController;
-    private int deadHash = Animator.StringToHash("Dead");
+    private int deadAnim = Animator.StringToHash("Dead");
+    private int shotAnim = Animator.StringToHash("Shot_Bust");
+    private int hitAnim = Animator.StringToHash("Hit");
+    private int runBlend = Animator.StringToHash("RunBlend");
+
+    private Collider capsule;
+
 
 
     private void Awake()
     {
-        EnemyLayer = LayerMask.NameToLayer("Enemy");
-        OwnerLayer = LayerMask.NameToLayer("Owner");
-        PlayerLayer = LayerMask.NameToLayer("Player");
+        enemyLayer = LayerMask.NameToLayer("Enemy");
+        ownerLayer = LayerMask.NameToLayer("Owner");
+        playerLayer = LayerMask.NameToLayer("Player");
         playerController = GetComponent<PlayerController>();
+        capsule = GetComponent<Collider>();
 
         PlayerManager.Instance.AddPlayer(this);
     }
@@ -39,14 +46,13 @@ public class PlayerBase : Hittable
         }
     }
 
-    [ObserversRpc] private void RpcDead() => animator.Play(deadHash);
-    [ObserversRpc] private void RpcHit() => animator.SetTrigger("Hit");
+    [ObserversRpc] private void RpcDead() => animator.Play(deadAnim);
+    [ObserversRpc] private void RpcHit() => animator.Play(hitAnim);
 
     private void Dead()
     {
         playerController.IsDead = true;
-        //animator.SetBool("Dead", true);
-        //animator.Play(deadHash);
+        capsule.enabled = false;
     }
 
     public override void OnStartClient()
@@ -57,12 +63,12 @@ public class PlayerBase : Hittable
         {
             if (base.IsOwner)
             {
-                gameObject.layer = OwnerLayer;
+                gameObject.layer = ownerLayer;
                 GetComponent<Invisible>().AlwaysVisible = true;
             }
             else
             {
-                gameObject.layer = EnemyLayer;
+                gameObject.layer = enemyLayer;
             }
         }
     }
@@ -73,6 +79,18 @@ public class PlayerBase : Hittable
     public void GetItem(byte playerIndex, ItemType itemType)
     {
         Debug.Log($"player{ClientManager.Connection} is got {itemType}");
+    }
+
+    [Client]
+    public void PlayShot()
+    {
+        animator.Play(shotAnim);
+    }
+
+    [Client]
+    public void PlayRun(float blend)
+    {
+        animator.SetFloat(runBlend, blend);
     }
 }
 

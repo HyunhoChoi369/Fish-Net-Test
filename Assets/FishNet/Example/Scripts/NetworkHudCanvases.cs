@@ -1,5 +1,8 @@
 ﻿using FishNet.Managing;
 using FishNet.Transporting;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -203,9 +206,26 @@ public class NetworkHudCanvases : MonoBehaviour
         if (_serverState != LocalConnectionState.Stopped)
             _networkManager.ServerManager.StopConnection(true);
         else
+        {
             _networkManager.ServerManager.StartConnection();
+            ShowIp();
+        }
     }
 
+    private void ShowIp()
+    {
+        if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+        {
+            Debug.Log("No Network Available");
+        }
+
+        IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+
+        var ippaddress = host
+            .AddressList
+            .FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
+        Debug.Log(ippaddress);
+    }
 
     public void OnClick_Client()
     {

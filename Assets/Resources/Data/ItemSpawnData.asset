@@ -9,14 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0220dcd5ef744a644990aa3f2afadbb2, type: 3}
-  m_Name: AutoRifle
+  m_Script: {fileID: 11500000, guid: 9caeef8d67175bb4181a45cb76cde9af, type: 3}
+  m_Name: ItemSpawnData
   m_EditorClassIdentifier: 
-  Index: 101
-  CanAuto: 1
-  ShotDelay: 0.2
-  MagazineCapacity: 30
-  AmmoMax: 120
-  Range: 10
-  Damage: 10
-  Spread: 10
+  Items:
+  - Type: 101
+    Position: {x: 0, y: 0.5, z: 0}
+  - Type: 101
+    Position: {x: 2, y: 0.5, z: 33}
+  - Type: 101
+    Position: {x: 33, y: 0.5, z: 2}

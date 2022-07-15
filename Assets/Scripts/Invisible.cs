@@ -7,6 +7,7 @@ public class Invisible : MonoBehaviour
     public bool AlwaysVisible = false;
 
     MeshRenderer[] renderers;
+    SkinnedMeshRenderer[] skinnedMeshes;
     int invisibleCount = 0;
 
 
@@ -14,6 +15,8 @@ public class Invisible : MonoBehaviour
     private void Start()
     {
         renderers = gameObject.GetComponentsInChildren<MeshRenderer>();
+        skinnedMeshes = gameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
+
         if (AlwaysVisible)
             SetVisible(true);
         else
@@ -33,6 +36,11 @@ public class Invisible : MonoBehaviour
     private void SetVisible(bool onoff)
     {
         foreach (var renderer in renderers)
+        {
+            renderer.enabled = onoff;
+        }
+
+        foreach (var renderer in skinnedMeshes)
         {
             renderer.enabled = onoff;
         }
