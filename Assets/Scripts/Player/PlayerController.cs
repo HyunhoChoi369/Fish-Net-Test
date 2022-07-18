@@ -85,38 +85,6 @@ public class PlayerController : NetworkBehaviour
         Vector3 direction = new Vector3(hor, 0f, ver) * _moveRate;
         rb.velocity = direction;
 
-        if (hor == 0f && ver == 0f)
-        {
-            playerBase.PlayRun(0);
-            return;
-        }
 
-        var forward = Vector3.Dot(transform.forward, direction);
-        var right = Vector3.Dot(transform.right, direction);
-
-        if (Mathf.Abs(forward) >= Mathf.Abs(right))
-        {
-            if (forward > 0)
-            {
-                playerBase.PlayRun(1);
-            }
-
-            if (forward < 0)
-            {
-                playerBase.PlayRun(3);
-            }
-        }
-        else
-        {
-            if (right > 0)
-            {
-                playerBase.PlayRun(2);
-            }
-
-            if (right < 0)
-            {
-                playerBase.PlayRun(4);
-            }
-        }
     }
 }

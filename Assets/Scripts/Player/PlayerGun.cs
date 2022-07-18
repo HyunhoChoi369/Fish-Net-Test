@@ -83,7 +83,7 @@ public class PlayerGun : NetworkBehaviour
     private void DrawShot()
     {
         //muzzleFlashAnimator.SetTrigger("Shoot");
-        playerBase.PlayShot();
+        //playerBase.PlayShot();
 
         var dir = transform.forward;
         var spreadX = Random.Range(-curGunData.Spread, curGunData.Spread);
