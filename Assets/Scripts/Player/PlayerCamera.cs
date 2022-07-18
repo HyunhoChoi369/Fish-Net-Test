@@ -1,31 +1,32 @@
 using Cinemachine;
 using FishNet.Managing;
 using FishNet.Transporting;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerCamera : MonoBehaviour
+namespace Survival.Ingame.Player
 {
-    [SerializeField] NetworkManager networkManager;
-
-    CinemachineVirtualCamera camera;
-
-    private void Start()
+    public class PlayerCamera : MonoBehaviour
     {
-        networkManager.ClientManager.OnClientConnectionState += ClientManager_OnClientConnectionState;
-    }
+        [SerializeField] NetworkManager networkManager;
 
-    private void OnDestroy()
-    {
-        networkManager.ClientManager.OnClientConnectionState -= ClientManager_OnClientConnectionState;
-    }
+        CinemachineVirtualCamera camera;
 
-    private void ClientManager_OnClientConnectionState(ClientConnectionStateArgs obj)
-    {
-        if (obj.ConnectionState == LocalConnectionState.Started)
+        private void Start()
         {
+            networkManager.ClientManager.OnClientConnectionState += ClientManager_OnClientConnectionState;
+        }
 
+        private void OnDestroy()
+        {
+            networkManager.ClientManager.OnClientConnectionState -= ClientManager_OnClientConnectionState;
+        }
+
+        private void ClientManager_OnClientConnectionState(ClientConnectionStateArgs obj)
+        {
+            if (obj.ConnectionState == LocalConnectionState.Started)
+            {
+
+            }
         }
     }
 }

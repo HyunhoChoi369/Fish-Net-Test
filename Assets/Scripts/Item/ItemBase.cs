@@ -5,34 +5,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ItemType
+namespace Survival.Ingame.Item
 {
-    Rifle = 100,
-    AutoRifle,
-}
-
-public class ItemBase : MonoBehaviour
-{
-    public ItemType type;
-    [HideInInspector] public int index;
-
-    public void Init(int index, bool isServer)
+    public enum ItemType
     {
-        this.index = index;
-        if (isServer)
-        {
-            var renderers = GetComponentsInChildren<Renderer>();
-            foreach (Renderer r in renderers)
-            {
-                r.enabled = false;
-            }
-
-            GetComponent<Collider>().enabled = false;
-        }
+        Rifle = 100,
+        AutoRifle,
     }
 
-    private void PickItem()
+    public class ItemBase : MonoBehaviour
     {
-        //player.GetItem(0, ItemType.AutoRifle);
+        public ItemType type;
+        [HideInInspector] public int index;
+
+        public void Init(int index, bool isServer)
+        {
+            this.index = index;
+            if (isServer)
+            {
+                var renderers = GetComponentsInChildren<Renderer>();
+                foreach (Renderer r in renderers)
+                {
+                    r.enabled = false;
+                }
+
+                GetComponent<Collider>().enabled = false;
+            }
+        }
+
+        private void PickItem()
+        {
+            //player.GetItem(0, ItemType.AutoRifle);
+        }
     }
 }

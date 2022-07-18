@@ -1,23 +1,26 @@
 using Cinemachine;
+using Survival.Util;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerManager : Singleton<PlayerManager>
+namespace Survival.Ingame.Player
 {
-    public List<PlayerBase> Characters = new List<PlayerBase>();
-    public event Action<int> OnCharacterCountChanged;
-    public CinemachineVirtualCamera PlayerCamera;
-
-    private void Awake()
+    public class PlayerManager : Singleton<PlayerManager>
     {
-        PlayerCamera = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
-    }
+        public List<PlayerBase> Characters = new List<PlayerBase>();
+        public event Action<int> OnCharacterCountChanged;
+        public CinemachineVirtualCamera PlayerCamera;
 
-    public void AddPlayer(PlayerBase player)
-    {
-        Characters.Add(player);
-        OnCharacterCountChanged?.Invoke(Characters.Count);
+        private void Awake()
+        {
+            PlayerCamera = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
+        }
+
+        public void AddPlayer(PlayerBase player)
+        {
+            Characters.Add(player);
+            OnCharacterCountChanged?.Invoke(Characters.Count);
+        }
     }
 }

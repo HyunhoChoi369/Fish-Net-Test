@@ -2,29 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletTrail : MonoBehaviour
+namespace Survival.Ingame.Bullet
 {
-    private Vector3 startPosition;
-    private Vector3 targetPosition;
-    private float progress;
-
-    [SerializeField] private float speed = 40f;
-
-    // Start is called before the first frame update
-    private void Start()
+    public class BulletTrail : MonoBehaviour
     {
-        startPosition = transform.position;
-    }
+        private Vector3 startPosition;
+        private Vector3 targetPosition;
+        private float progress;
 
-    // Update is called once per frame
-    private void Update()
-    {
-        progress += Time.deltaTime * speed;
-        transform.position = Vector3.Lerp(startPosition, targetPosition, progress);
-    }
+        [SerializeField] private float speed = 40f;
 
-    public void SetTargetPosition(Vector3 targetPosition)
-    {
-        this.targetPosition = targetPosition;
+        // Start is called before the first frame update
+        private void Start()
+        {
+            startPosition = transform.position;
+        }
+
+        // Update is called once per frame
+        private void Update()
+        {
+            progress += Time.deltaTime * speed;
+            transform.position = Vector3.Lerp(startPosition, targetPosition, progress);
+        }
+
+        public void SetTargetPosition(Vector3 targetPosition)
+        {
+            this.targetPosition = targetPosition;
+        }
     }
 }

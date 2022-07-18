@@ -1,19 +1,23 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Survival.Ingame.Player;
 
-public class ServerUIController : MonoBehaviour
+namespace Survival.Ingame.UI
 {
-    [SerializeField] private TMP_Text info;
-    public Button startButton;
-
-    private void Start()
+    public class ServerUIController : MonoBehaviour
     {
-        PlayerManager.Instance.OnCharacterCountChanged += ChangeWaitingPlayer;
-    }
+        [SerializeField] private TMP_Text info;
+        public Button startButton;
 
-    public void ChangeWaitingPlayer(int cnt)
-    {
-        info.text = $"Waiting Player : {cnt}";
+        private void Start()
+        {
+            PlayerManager.Instance.OnCharacterCountChanged += ChangeWaitingPlayer;
+        }
+
+        public void ChangeWaitingPlayer(int cnt)
+        {
+            info.text = $"Waiting Player : {cnt}";
+        }
     }
 }
