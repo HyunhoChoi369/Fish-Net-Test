@@ -421,7 +421,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _moveRate: 10
-  _clientAuth: 1
+  _rotateRate: 360
   IsDead: 0
 --- !u!114 &1391040245360666872
 MonoBehaviour:

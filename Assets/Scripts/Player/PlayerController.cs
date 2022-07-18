@@ -11,17 +11,15 @@ namespace Survival.Ingame.Player
         [SerializeField]
         private float _moveRate = 4f;
         [SerializeField]
-        private bool _clientAuth = true;
+        private float _rotateRate = 1f;
 
         private Camera camera;
-        private PlayerBase playerBase;
         private Rigidbody rb;
 
-        [SyncVar] public bool IsDead = false;
+        [SyncVar, HideInInspector] public bool IsDead = false;
 
         private void Awake()
         {
-            playerBase = GetComponent<PlayerBase>();
             rb = GetComponent<Rigidbody>();
         }
 
@@ -38,56 +36,35 @@ namespace Survival.Ingame.Player
 
         private void Update()
         {
+            if (IsServerOnly) return;
             if (!base.IsOwner) return;
             if (IsDead) return;
 
-            var dir = transform.forward;
-
-            if (IsClient)
-            {
-                Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-                Physics.Raycast(ray, out var hit, float.MaxValue, layerMask);
-                dir = hit.point;
-                dir.y = transform.position.y;
-            }
-
-            //Vector3 mousePos = camera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, camera.transform.position.y));
-
+            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+            Physics.Raycast(ray, out var hit, float.MaxValue, layerMask);
+            var point = hit.point;
+            point.y = transform.position.y;
 
             float hor = Input.GetAxisRaw("Horizontal");
             float ver = Input.GetAxisRaw("Vertical");
 
-            /* If ground cannot be found for 20 units then bump up 3 units. 
-             * This is just to keep player on ground if they fall through
-             * when changing scenes.             */
-            if (_clientAuth || (!_clientAuth && base.IsServer))
-            {
-                if (!Physics.Linecast(transform.position + new Vector3(0f, 0.3f, 0f), transform.position - (Vector3.one * 20f)))
-                    transform.position += new Vector3(0f, 3f, 0f);
-            }
 
-            if (_clientAuth)
-                Move(hor, ver, dir);
-            else
-                RpcMove(hor, ver, dir);
+            if (!Physics.Linecast(transform.position + new Vector3(0f, 0.3f, 0f), transform.position - (Vector3.one * 20f)))
+                transform.position += new Vector3(0f, 3f, 0f);
+
+            Move(hor, ver, point);
         }
 
-        [ServerRpc]
-        private void RpcMove(float hor, float ver, Vector3 dir)
-        {
-            Move(hor, ver, dir);
-        }
-
-        private void Move(float hor, float ver, Vector3 dir)
+        private void Move(float hor, float ver, Vector3 point)
         {
             if (IsDead) return;
 
-            transform.LookAt(dir);
+            //transform.LookAt(point);
+            var targetRot = Quaternion.LookRotation(point - transform.position, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, _rotateRate * Time.deltaTime);
 
             Vector3 direction = new Vector3(hor, 0f, ver) * _moveRate;
             rb.velocity = direction;
-
-
         }
     }
 }
